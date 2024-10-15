@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dockerImage.run('-p 5000:5000')
+                    dockerImage.run('-p 5000:5000 flask-app tunp-demo-flask-app')
                 }
             }
         }
