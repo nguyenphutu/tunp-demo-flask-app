@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /tunp-demo-flask-app
 
 # Install dependencies
 COPY requirements.txt requirements.txt
@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "/app/app.py"]
+CMD ["python", "app/app.py"]
