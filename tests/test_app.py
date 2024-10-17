@@ -11,7 +11,7 @@ def client():
 def test_home(client):
     rv = client.get('/')
     json_data = rv.get_json()
-    assert json_data['message'] == 'Hello, CI/CD with Jenkins and Docker!'
+    assert json_data['message'] == 'Hello, CI/CD with !'
 
 
 def test_status(client):
