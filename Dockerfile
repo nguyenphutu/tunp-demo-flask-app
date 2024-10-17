@@ -9,10 +9,10 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 # Copy the entire application
-COPY . .
+COPY . /tunp-demo-flask-app
 
 # Expose the port Flask runs on
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "app.py"]
+CMD ["python", "/tunp-demo-flask-app/app.py"]
