@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+    environment {
+        TELEGRAM_TOKEN = '7799067201:AAEOMDltsWiVAzStFDRz3_C-y4JTE0KAiZQ'
+        TELEGRAM_CHAT_ID = '-4545546419'
+    }
     stages {
         stage('Clone repository') {
             steps {
@@ -47,4 +50,24 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            script {
+                sendTelegramMessage("✅ Jenkins Build Successful: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}")
+            }
+        }
+        failure {
+            script {
+                sendTelegramMessage("❌ Jenkins Build Failed: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}")
+            }
+        }
+    }
+}
+
+def sendTelegramMessage(String message) {
+    sh """
+    curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \\
+    -d chat_id=${TELEGRAM_CHAT_ID} \\
+    -d text="${message}"
+    """
 }
