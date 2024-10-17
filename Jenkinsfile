@@ -21,8 +21,10 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                // Chạy test
-                sh 'pytest'
+                dockerImage.inside {
+                    // Đảm bảo đúng đường dẫn tới thư mục tests
+                    sh 'pytest tests/'
+                }
             }
         }
         stage('Stop and Remove Existing Container') {
