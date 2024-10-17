@@ -21,12 +21,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                script {
-                    dockerImage.inside {
-                            sh 'pytest'
-                        }
-                    }
-                }
+                // Chạy test
+                sh 'pytest'
             }
         }
         stage('Stop and Remove Existing Container') {
