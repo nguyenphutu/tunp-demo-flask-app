@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set working directory
-WORKDIR /tunp-demo-flask-app
+WORKDIR /var/lib/jenkins/workspace/tunp-demo-flask-app
 
 # Copy requirements.txt and install dependencies
 COPY requirements.txt requirements.txt
