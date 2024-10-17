@@ -25,11 +25,24 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy') {
+        stage('Stop and Remove Existing Container') {
             steps {
                 script {
-                    sh 'docker run -d -p 5000:5000 flask-app'
+                    // Stop and remove the existing Flask container
+                    sh '''
+                    if [ "$(docker ps -q -f name=flask-app)" ]; then
+                        docker stop flask-app
+                        docker rm flask-app
+                    fi
+                    '''
+                }
+            }
+        }
+        stage('Run New Container') {
+            steps {
+                script {
+                    // Run the new container
+                    sh 'docker run -d -p 5000:5000 --name flask-app flask-app:latest'
                 }
             }
         }
