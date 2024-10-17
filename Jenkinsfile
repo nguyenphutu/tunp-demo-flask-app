@@ -63,12 +63,14 @@ pipeline {
         }
         failure {
             script {
+                def errorLog = getLastErrorLog()
                 sendTelegramMessage("❌ *Build Failed*\n\n" +
                                     "*Job Name:* ${env.JOB_NAME}\n" +
                                     "*Build Number:* ${env.BUILD_NUMBER}\n" +
                                     "*Branch:* ${env.GIT_BRANCH}\n" +
                                     "*Build URL:* ${env.BUILD_URL}\n" +
-                                    "*Duration:* ${currentBuild.durationString}")
+                                    "*Duration:* ${currentBuild.durationString}\n" +
+                                    "*Error Log:*\n${errorLog}")
             }
         }
     }
@@ -80,4 +82,8 @@ def sendTelegramMessage(String message) {
     -d chat_id=${TELEGRAM_CHAT_ID} \\
     -d text="${message}"
     """
+}
+def getLastErrorLog() {
+    def logText = sh(script: "tail -n 10 ${env.WORKSPACE}/logs/build.log", returnStdout: true).trim()
+    return logText ?: "No error log available"
 }
