@@ -3,6 +3,7 @@ pipeline {
     environment {
         TELEGRAM_TOKEN = '7799067201:AAEOMDltsWiVAzStFDRz3_C-y4JTE0KAiZQ'
         TELEGRAM_CHAT_ID = '-4545546419'
+        TEST_LOG_FILE = 'test_output.log'
     }
     stages {
         stage('Clone repository') {
@@ -23,7 +24,9 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
-                        sh 'pytest tests/'
+                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                            sh 'pytest | tee ${TEST_LOG_FILE}' // Lưu log của pytest vào file log
+                        }
                     }
                 }
             }
@@ -63,14 +66,14 @@ pipeline {
         }
         failure {
             script {
-                def errorLog = getLastErrorLog()
+                def testLog = readFile("${env.TEST_LOG_FILE}").trim()
                 sendTelegramMessage("❌ *Build Failed*\n\n" +
                                     "*Job Name:* ${env.JOB_NAME}\n" +
                                     "*Build Number:* ${env.BUILD_NUMBER}\n" +
                                     "*Branch:* ${env.GIT_BRANCH}\n" +
                                     "*Build URL:* ${env.BUILD_URL}\n" +
                                     "*Duration:* ${currentBuild.durationString}\n" +
-                                    "*Error Log:*\n${errorLog}")
+                                    "*Error Log:*\n${testLog}")
             }
         }
     }
@@ -82,8 +85,4 @@ def sendTelegramMessage(String message) {
     -d chat_id=${TELEGRAM_CHAT_ID} \\
     -d text="${message}"
     """
-}
-def getLastErrorLog() {
-    def logText = sh(script: "tail -n 10 ${env.WORKSPACE}/logs/build.log", returnStdout: true).trim()
-    return logText ?: "No error log available"
 }
