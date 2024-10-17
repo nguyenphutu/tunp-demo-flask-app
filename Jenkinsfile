@@ -64,7 +64,6 @@ pipeline {
         }
         failure {
             script {
-                def testLog = readFile("${env.TEST_LOG_FILE}").trim()
                 sendTelegramMessage("❌ *Build Failed*\n\n" +
                                     "*Job Name:* ${env.JOB_NAME}\n" +
                                     "*Build Number:* ${env.BUILD_NUMBER}\n" +
