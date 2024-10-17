@@ -53,12 +53,22 @@ pipeline {
     post {
         success {
             script {
-                sendTelegramMessage("✅ Jenkins Build Successful: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}")
+                sendTelegramMessage("✅ *Build Successful*\n\n" +
+                                    "*Job Name:* ${env.JOB_NAME}\n" +
+                                    "*Build Number:* ${env.BUILD_NUMBER}\n" +
+                                    "*Branch:* ${env.GIT_BRANCH}\n" +
+                                    "*Build URL:* ${env.BUILD_URL}\n" +
+                                    "*Duration:* ${currentBuild.durationString}")
             }
         }
         failure {
             script {
-                sendTelegramMessage("❌ Jenkins Build Failed: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}")
+                sendTelegramMessage("❌ *Build Failed*\n\n" +
+                                    "*Job Name:* ${env.JOB_NAME}\n" +
+                                    "*Build Number:* ${env.BUILD_NUMBER}\n" +
+                                    "*Branch:* ${env.GIT_BRANCH}\n" +
+                                    "*Build URL:* ${env.BUILD_URL}\n" +
+                                    "*Duration:* ${currentBuild.durationString}")
             }
         }
     }
