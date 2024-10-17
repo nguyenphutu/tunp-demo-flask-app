@@ -2,17 +2,17 @@
 FROM python:3.9-slim
 
 # Set working directory
-WORKDIR /var/lib/jenkins/workspace/tunp-demo-flask-app
+WORKDIR /app
 
-# Copy requirements.txt and install dependencies
+# Install dependencies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy the entire application
-COPY . /tunp-demo-flask-app
+# Copy the rest of the application
+COPY . .
 
-# Expose the port Flask runs on
+# Expose the port Flask will run on
 EXPOSE 5000
 
 # Run the Flask app
-CMD ["python", "/tunp-demo-flask-app/app.py"]
+CMD ["flask", "run", "--host=0.0.0.0"]
